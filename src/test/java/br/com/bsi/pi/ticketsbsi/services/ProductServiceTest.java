@@ -3,45 +3,47 @@ package br.com.bsi.pi.ticketsbsi.services;
 import br.com.bsi.pi.ticketsbsi.entities.Product;
 import br.com.bsi.pi.ticketsbsi.repositories.ProductRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductServiceTest {
 
-    private ProductRepository repository = Mockito.mock(ProductRepository.class);
-
-    private ProductService productService;
-
-    @BeforeEach
-    public void setup() {
-        productService = new ProductService(repository);
-    }
+    ProductRepository productRepository = Mockito.mock(ProductRepository.class);
 
     @Test
     void findAll() {
-        Mockito.when(repository.findAll()).thenReturn(new ArrayList<>());
+        Mockito.when(productRepository.findAll()).thenReturn(new ArrayList<>());
 
-        var result = repository.findAll();
+        var service = new ProductService(productRepository);
+
+        var result = service.findAll();
 
         Assertions.assertNotNull(result);
-
     }
 
     @Test
     void findById() {
-        final Long l = 1L;
 
-        Product p = Mockito.mock(Product.class);
+        Long id = 1L;
 
-        Mockito.when(repository.findById(l)).thenReturn(java.util.Optional.ofNullable(p));
+        Optional optional = Mockito.mock(Optional.class);
 
-        var result = repository.findById(l);
+        Mockito.when(productRepository.findById(id)).thenReturn(optional);
+
+        Mockito.when(optional.get()).thenReturn(new Product());
+
+        var service = new ProductService(productRepository);
+
+        var result = service.findById(id);
 
         Assertions.assertNotNull(result);
     }
+
 }

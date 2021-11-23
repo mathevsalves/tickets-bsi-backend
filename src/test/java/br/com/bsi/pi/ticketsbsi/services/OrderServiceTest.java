@@ -3,49 +3,60 @@ package br.com.bsi.pi.ticketsbsi.services;
 import br.com.bsi.pi.ticketsbsi.entities.Order;
 import br.com.bsi.pi.ticketsbsi.repositories.OrderRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class OrderServiceTest {
 
-
-    private OrderRepository repository = Mockito.mock(OrderRepository.class);
-
-    private OrderService orderService;
-
-    @BeforeEach
-    public void setup() {
-        orderService = new OrderService(repository);
-    }
+    OrderRepository orderRepository = Mockito.mock(OrderRepository.class);
 
     @Test
     void findAll() {
-        Mockito.when(repository.findAll()).thenReturn(new ArrayList<>());
+        Mockito.when(orderRepository.findAll()).thenReturn(new ArrayList<>());
 
-        var result = repository.findAll();
+        var service = new OrderService(orderRepository);
+
+        var result = service.findAll();
 
         Assertions.assertNotNull(result);
-
     }
 
     @Test
     void findById() {
-        final Long l = 1L;
 
-        Order o = Mockito.mock(Order.class);
+        Long id = 1L;
 
-        Mockito.when(repository.findById(l)).thenReturn(java.util.Optional.ofNullable(o));
+        Optional optional = Mockito.mock(Optional.class);
 
-        var result = repository.findById(l);
+        Mockito.when(orderRepository.findById(id)).thenReturn(optional);
+
+        Mockito.when(optional.get()).thenReturn(new Order());
+
+        var service = new OrderService(orderRepository);
+
+        var result = service.findById(id);
 
         Assertions.assertNotNull(result);
     }
+
+    @Test
+    void insert() {
+
+        Mockito.when(orderRepository.save(Mockito.any())).thenReturn(new Order());
+
+        var service = new OrderService(orderRepository);
+
+        var result = service.insert(new Order());
+
+        Assertions.assertNotNull(result);
+
+    }
+
 }

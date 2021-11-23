@@ -1,6 +1,8 @@
 package br.com.bsi.pi.ticketsbsi.resources;
 
+import br.com.bsi.pi.ticketsbsi.entities.Category;
 import br.com.bsi.pi.ticketsbsi.entities.Product;
+import br.com.bsi.pi.ticketsbsi.services.CategoryService;
 import br.com.bsi.pi.ticketsbsi.services.ProductService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,14 +14,14 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductResourceTest {
-    
+
     private ProductService service = Mockito.mock(ProductService.class);
 
-    private ProductResource ProductResource;
+    private ProductResource productResource;
 
     @BeforeEach
     public void setup() {
-        ProductResource = new ProductResource(service);
+        productResource = new ProductResource(service);
     }
 
     @Test
@@ -38,13 +40,14 @@ class ProductResourceTest {
 
         final Long l = 1L;
 
-        Product p = Mockito.mock(Product.class);
+        Product o = Mockito.mock(Product.class);
 
-        Mockito.when(service.findById(l)).thenReturn(p);
+        Mockito.when(service.findById(l)).thenReturn(o);
 
         var result = service.findById(l);
 
         Assertions.assertNotNull(result);
 
     }
-}
+
+    }

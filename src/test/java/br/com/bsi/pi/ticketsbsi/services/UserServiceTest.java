@@ -1,6 +1,7 @@
 package br.com.bsi.pi.ticketsbsi.services;
 
 import br.com.bsi.pi.ticketsbsi.dto.LoginDTO;
+import br.com.bsi.pi.ticketsbsi.entities.Order;
 import br.com.bsi.pi.ticketsbsi.entities.User;
 import br.com.bsi.pi.ticketsbsi.repositories.UserRepository;
 import org.junit.jupiter.api.Assertions;

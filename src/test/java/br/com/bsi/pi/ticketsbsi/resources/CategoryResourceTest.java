@@ -1,30 +1,27 @@
 package br.com.bsi.pi.ticketsbsi.resources;
 
 import br.com.bsi.pi.ticketsbsi.entities.Category;
+import br.com.bsi.pi.ticketsbsi.entities.Order;
 import br.com.bsi.pi.ticketsbsi.services.CategoryService;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CategoryResourceTest {
 
-    private CategoryService service = Mockito.mock(CategoryService.class);
-
-    private CategoryResource categoryResource;
-
-    @BeforeEach
-    public void setup() {
-        categoryResource = new CategoryResource(service);
-    }
+    CategoryService service = Mockito.mock(CategoryService.class);
 
     @Test
     void findAll() {
 
         Mockito.when(service.findAll()).thenReturn(new ArrayList<>());
+
+        var resource = new CategoryResource(service);
 
         var result = service.findAll();
 
@@ -35,13 +32,15 @@ class CategoryResourceTest {
     @Test
     void findById() {
 
-        final Long l = 1L;
+        Long id = 1L;
 
         Category c = Mockito.mock(Category.class);
 
-        Mockito.when(service.findById(l)).thenReturn(c);
+        Mockito.when(service.findById(id)).thenReturn(c);
 
-        var result = service.findById(l);
+        var resource = new CategoryResource(service);
+
+        var result = service.findById(id);
 
         Assertions.assertNotNull(result);
     }

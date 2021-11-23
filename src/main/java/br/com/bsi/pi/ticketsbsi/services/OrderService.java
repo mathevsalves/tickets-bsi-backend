@@ -11,11 +11,11 @@ import java.util.Optional;
 @Service
 public class OrderService {
 
-    @Autowired
     private OrderRepository repository;
 
-    public OrderService(OrderRepository repository) {
-        this.repository = repository;
+    @Autowired
+    public OrderService(OrderRepository orderRepository) {
+        this.repository = orderRepository;
     }
 
     public List<Order> findAll() {
@@ -23,7 +23,7 @@ public class OrderService {
     }
 
     public Order findById(Long id) {
-        Optional<Order> obj = repository.findById(id);
+        Optional <Order> obj = repository.findById(id);
         return obj.get();
     }
 
