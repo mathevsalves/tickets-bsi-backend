@@ -45,9 +45,9 @@ public class TestConfig implements CommandLineRunner {
         // Product p5 = new Product(null, "Rails for Dummies", "Cras fringilla convallis sem vel faucibus.", 100.99, "");
 
 
-        Product p1 = new Product(null, "/assets/img/ze-vaqueiro.jpg", "Zé Vaqueiro", "Caruaru - PE", new Date(), 300.0, "Cantor Zé Vaqueiro");
-        Product p2 = new Product(null, "/assets/img/thiaguinho.jpg", "Thiaguinho", "São Paulo - SP", new Date(), 220.0, "Cantor Thiaguinho");
-        Product p3 = new Product(null, "/assets/img/projota.jpg", "Projota", "Rio de Janeiro - RJ", new Date(), 175.0, "Cantor Projota");
+//        Product p1 = new Product(null, "/assets/img/ze-vaqueiro.jpg", "Zé Vaqueiro", "Caruaru - PE", new Date(), 300.0, "Cantor Zé Vaqueiro");
+//        Product p2 = new Product(null, "/assets/img/thiaguinho.jpg", "Thiaguinho", "São Paulo - SP", new Date(), 220.0, "Cantor Thiaguinho");
+//        Product p3 = new Product(null, "/assets/img/projota.jpg", "Projota", "Rio de Janeiro - RJ", new Date(), 175.0, "Cantor Projota");
 
         // categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
         // productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
