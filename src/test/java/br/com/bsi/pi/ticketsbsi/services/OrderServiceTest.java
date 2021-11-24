@@ -44,6 +44,7 @@ class OrderServiceTest {
         var result = service.findById(id);
 
         Assertions.assertNotNull(result);
+
     }
 
     @Test
