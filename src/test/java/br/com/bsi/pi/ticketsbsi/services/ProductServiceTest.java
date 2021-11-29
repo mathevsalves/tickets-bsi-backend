@@ -1,16 +1,15 @@
 package br.com.bsi.pi.ticketsbsi.services;
 
-import br.com.bsi.pi.ticketsbsi.entities.Product;
-import br.com.bsi.pi.ticketsbsi.repositories.ProductRepository;
+import java.util.ArrayList;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
+import br.com.bsi.pi.ticketsbsi.entities.Product;
+import br.com.bsi.pi.ticketsbsi.repositories.ProductRepository;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductServiceTest {

@@ -1,17 +1,14 @@
 package br.com.bsi.pi.ticketsbsi.resources;
 
-import br.com.bsi.pi.ticketsbsi.entities.Category;
-import br.com.bsi.pi.ticketsbsi.entities.Product;
-import br.com.bsi.pi.ticketsbsi.services.CategoryService;
-import br.com.bsi.pi.ticketsbsi.services.ProductService;
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
+import br.com.bsi.pi.ticketsbsi.entities.Product;
+import br.com.bsi.pi.ticketsbsi.services.ProductService;
 
 class ProductResourceTest {
 
