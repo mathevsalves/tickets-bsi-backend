@@ -5,6 +5,8 @@ import br.com.bsi.pi.ticketsbsi.entities.User;
 import br.com.bsi.pi.ticketsbsi.repositories.UserRepository;
 import br.com.bsi.pi.ticketsbsi.services.exceptions.DatabaseException;
 import br.com.bsi.pi.ticketsbsi.services.exceptions.ResourceNotFoundException;
+import javassist.NotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -61,7 +63,6 @@ public class UserService {
     private void updateData(User entity, User obj) {
         entity.setName(obj.getName());
         entity.setEmail(obj.getEmail());
-        entity.setPhone(obj.getPhone());
     }
 
     public User login(LoginDTO login) {

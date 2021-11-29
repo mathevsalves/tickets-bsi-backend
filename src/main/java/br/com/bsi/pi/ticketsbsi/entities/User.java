@@ -1,12 +1,14 @@
 package br.com.bsi.pi.ticketsbsi.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "tb_user")
@@ -16,25 +18,26 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+    
+    @Column(name = "name", nullable = false)
     private String name;
+    
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
-    private String phone;
+    
+    @Column(name = "password", nullable = false)
     private String password;
-
-    // @JsonIgnore
-    // @OneToMany(mappedBy = "client")
-    // private List<Order> orders = new ArrayList<>();
 
     public User() {
     }
 
-    public User(Long id, String name, String email, String phone, String password) {
+    public User(Long id, String name, String email, String password) {
         super();
         this.id = id;
         this.name = name;
         this.email = email;
-        this.phone = phone;
         this.password = password;
     }
 
@@ -62,14 +65,6 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -78,20 +73,29 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    // public List<Order> getOrders() {
-    //     return orders;
-    // }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id);
-    }
-
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        User other = (User) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+    
 }
