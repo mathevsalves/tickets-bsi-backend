@@ -33,6 +33,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_api_key: "c3208b3d-37d8-4f4d-b045-381f7f45717c"
           heroku_app_name: "tickets-bsi"
           heroku_email: "matheus_alves01@icloud.com"
