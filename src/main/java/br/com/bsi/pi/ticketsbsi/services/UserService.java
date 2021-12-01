@@ -1,21 +1,20 @@
 package br.com.bsi.pi.ticketsbsi.services;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
 import br.com.bsi.pi.ticketsbsi.dto.LoginDTO;
 import br.com.bsi.pi.ticketsbsi.entities.User;
 import br.com.bsi.pi.ticketsbsi.repositories.UserRepository;
 import br.com.bsi.pi.ticketsbsi.services.exceptions.DatabaseException;
 import br.com.bsi.pi.ticketsbsi.services.exceptions.ResourceNotFoundException;
-import javassist.NotFoundException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -52,7 +51,7 @@ public class UserService {
 
     public User update(Long id, User obj) {
         try {
-            User entity = repository.getOne(id);
+            User entity = repository.findById(id).get();
             updateData(entity, obj);
             return repository.save(entity);
         } catch (EntityNotFoundException e) {

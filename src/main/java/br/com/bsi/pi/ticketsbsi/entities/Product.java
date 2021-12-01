@@ -5,11 +5,16 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_product")
@@ -28,6 +33,10 @@ public class Product implements Serializable {
     private Date dateShow;
     private Double price;
     private String description;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Order order;
 
     public Product() {
     }

@@ -1,21 +1,25 @@
 package br.com.bsi.pi.ticketsbsi.resources;
 
-import br.com.bsi.pi.ticketsbsi.entities.Order;
-import br.com.bsi.pi.ticketsbsi.services.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.net.URI;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.List;
+import br.com.bsi.pi.ticketsbsi.entities.Order;
+import br.com.bsi.pi.ticketsbsi.services.OrderService;
 
 @RestController
-@RequestMapping(value = "/orders")
+@RequestMapping(value = "/order")
 @CrossOrigin(origins = "*")
 public class OrderResource {
 
@@ -37,11 +41,23 @@ public class OrderResource {
         return ResponseEntity.ok().body(obj);
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Order> insert(@RequestBody Order order) {
-        Order obj = service.insert(order);
-        return ResponseEntity.ok().body(obj);
+        order = service.insert(order);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(order.getId()).toUri();
+        return ResponseEntity.created(uri).body(order);
     }
 
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Order> update(@PathVariable Long id, @RequestBody Order order) {
+        order = service.update(id, order);
+        return ResponseEntity.ok().body(order);
+    }
 
 }

@@ -16,14 +16,19 @@ class CategoryResourceTest {
 
     CategoryService service = Mockito.mock(CategoryService.class);
 
+    CategoryResource categoryResourceTest;
+
+    @BeforeEach
+    public void setup() {
+        categoryResourceTest = new CategoryResource(service);
+    }
+
     @Test
     void findAll() {
 
         Mockito.when(service.findAll()).thenReturn(new ArrayList<>());
 
-        var resource = new CategoryResource(service);
-
-        var result = service.findAll();
+        var result = categoryResourceTest.findAll();
 
         Assertions.assertNotNull(result);
 
@@ -38,9 +43,7 @@ class CategoryResourceTest {
 
         Mockito.when(service.findById(id)).thenReturn(c);
 
-        var resource = new CategoryResource(service);
-
-        var result = service.findById(id);
+        var result = categoryResourceTest.findById(id);
 
         Assertions.assertNotNull(result);
     }

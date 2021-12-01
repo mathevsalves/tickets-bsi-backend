@@ -29,7 +29,7 @@ class OrderResourceTest {
 
         Mockito.when(service.findAll()).thenReturn(new ArrayList<>());
 
-        var result = service.findAll();
+        var result = orderResource.findAll();
 
         Assertions.assertNotNull(result);
 
@@ -44,7 +44,7 @@ class OrderResourceTest {
 
         Mockito.when(service.findById(l)).thenReturn(o);
 
-        var result = service.findById(l);
+        var result = orderResource.findById(l);
 
         Assertions.assertNotNull(result);
 
@@ -59,7 +59,7 @@ class OrderResourceTest {
 
         Mockito.when(service.insert(order)).thenReturn(o);
 
-        var result = service.insert(order);
+        var result = orderResource.insert(order);
 
         Assertions.assertNotNull(result);
 

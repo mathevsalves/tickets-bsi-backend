@@ -1,11 +1,20 @@
+
 package br.com.bsi.pi.ticketsbsi.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
 import java.io.Serializable;
-import java.time.Instant;
-import java.util.Objects;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_payment")
@@ -16,20 +25,45 @@ public class Payment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Instant moment;
+
+    @Size(min = 3, max = 100)
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Size(min = 16, max = 16)
+    @Column(name = "number", nullable = false, length = 16)
+    private String number;
+
+    @Size(min = 5, max = 5)
+    @Column(name = "validated", nullable = false, length = 5)
+    private String validated;
+
+    @Size(min = 3, max = 3)
+    @Column(name = "cvv", nullable = false, length = 3)
+    private String cvv;
+
+    @Size(min = 11, max = 14)
+    @Column(name = "cpfCnpj", nullable = false)
+    private String cpfCnpj;
+
+    @Email
+    @Column(name = "email", nullable = false)
+    private String email;
 
     @JsonIgnore
-    @OneToOne
-    @MapsId
+    @OneToOne(mappedBy = "cart", cascade = CascadeType.DETACH)
     private Order order;
 
-    public Payment() {
-    }
+    public Payment() {}
 
-    public Payment(Long id, Instant moment, Order order) {
+    public Payment(Long id, String name, String number, String validated, String cvv, String cpfCnpj, String email) {
         this.id = id;
-        this.moment = moment;
-        this.order = order;
+        this.name = name;
+        this.number = number;
+        this.validated = validated;
+        this.cvv = cvv;
+        this.cpfCnpj = cpfCnpj;
+        this.email = email;
     }
 
     public Long getId() {
@@ -40,32 +74,77 @@ public class Payment implements Serializable {
         this.id = id;
     }
 
-    public Instant getMoment() {
-        return moment;
+    public String getName() {
+        return name;
     }
 
-    public void setMoment(Instant moment) {
-        this.moment = moment;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Order getOrder() {
-        return order;
+    public String getNumber() {
+        return number;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Payment payment = (Payment) o;
-        return Objects.equals(id, payment.id);
+    public String getValidated() {
+        return validated;
+    }
+
+    public void setValidated(String validated) {
+        this.validated = validated;
+    }
+
+    public String getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(String cvv) {
+        this.cvv = cvv;
+    }
+
+    public String getCpfCnpj() {
+        return cpfCnpj;
+    }
+
+    public void setCpfCnpj(String cpfCnpj) {
+        this.cpfCnpj = cpfCnpj;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Payment other = (Payment) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
 }

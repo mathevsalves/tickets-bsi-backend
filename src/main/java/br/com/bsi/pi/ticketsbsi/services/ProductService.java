@@ -1,5 +1,7 @@
 package br.com.bsi.pi.ticketsbsi.services;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +29,16 @@ public class ProductService {
 
     public List<Product> findAll() {
         return repository.findAll();
+    }
+
+    public List<Product> findAll(boolean isPrevious) {
+        final Date dateNow = new Date();
+        List<Product> list = new ArrayList<>();
+        if(isPrevious)
+            list = repository.findByDateShowLessThan(dateNow);
+        else
+            list = repository.findByDateShowGreaterThan(dateNow);
+        return list;
     }
 
     public Product findById(Long id) {
@@ -64,7 +76,6 @@ public class ProductService {
         entity.setDateShow(obj.getDateShow());
         entity.setPrice(obj.getPrice());
         entity.setDescription(obj.getDescription());
-        entity.setPhoto(obj.getPhoto());
     }
 
 }

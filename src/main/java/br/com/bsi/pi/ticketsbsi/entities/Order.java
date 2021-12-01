@@ -1,17 +1,20 @@
+
 package br.com.bsi.pi.ticketsbsi.entities;
 
 import java.io.Serializable;
-import java.time.Instant;
-import java.util.Date;
-import java.util.Objects;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_order")
@@ -23,53 +26,30 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
-    private Date moment;
+    private Integer quantity;
+    private Double price;
 
-    // private Integer orderStatus;
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    // @ManyToOne
-    // @JoinColumn(name = "client_id")
-    // private User client;
+    @OneToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
-    // @OneToMany(mappedBy = "id.order")
-    // private Set<OrderItem> items = new HashSet<>();
-
-    // @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    // private Payment payment;
-
-    private Long idShow;
-    private String name;
-    private String number;
-    private String validated;
-    private String cvv;
-    private String cpf;
-    private String email;
+    private Double total;
 
     public Order() {
     }
 
-
-    // public Order(Long id, Date moment, OrderStatus orderStatus, User client) {
-    // this.id = id;
-    // this.moment = moment;
-    // setOrderStatus(orderStatus);
-    // this.client = client;
-    // }
-
-    public Order(Long id, Date moment, Long idShow, String name, String number, String validated, String cvv,
-                 String cpf, String email) {
+    public Order(Long id, Integer quantity, Double price, Product product, Payment payment, Double total) {
         this.id = id;
-        this.moment = moment;
-        this.idShow = idShow;
-        this.name = name;
-        this.number = number;
-        this.validated = validated;
-        this.cvv = cvv;
-        this.cpf = cpf;
-        this.email = email;
+        this.quantity = quantity;
+        this.price = price;
+        this.product = product;
+        this.payment = payment;
+        this.total = total;
     }
-
 
     public Long getId() {
         return id;
@@ -79,118 +59,73 @@ public class Order implements Serializable {
         this.id = id;
     }
 
-    public Date getMoment() {
-        return moment;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setMoment(Date moment) {
-        this.moment = moment;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
-    // public OrderStatus getOrderStatus() {
-    // return OrderStatus.valueOf(orderStatus);
-    // }
-
-    // public void setOrderStatus(OrderStatus orderStatus) {
-    // if(orderStatus != null)
-    // this.orderStatus = orderStatus.getCode();
-    // }
-
-    // public User getClient() {
-    // return client;
-    // }
-
-    // public void setClient(User client) {
-    // this.client = client;
-    // }
-
-    // public Payment getPayment() {
-    // return payment;
-    // }
-
-    // public void setPayment(Payment payment) {
-    // this.payment = payment;
-    // }
-
-    // public Set<OrderItem> getItems() {
-    // return items;
-    // }
-
-    // public Double getTotal() {
-    // double sum = 0.0;
-    // for (OrderItem oi : items) {
-    // sum += oi.getSubTotal();
-    // }
-    // return sum;
-    // }
-
-    public Long getIdShow() {
-        return idShow;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setIdShow(Long idShow) {
-        this.idShow = idShow;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
-    public String getName() {
-        return name;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
-    public String getNumber() {
-        return number;
+    public Payment getPayment() {
+        return payment;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 
-    public String getValidated() {
-        return validated;
+    public Double getTotal() {
+        return total;
     }
 
-    public void setValidated(String validated) {
-        this.validated = validated;
+    public void setTotal(Double total) {
+        this.total = total;
     }
 
-    public String getCvv() {
-        return cvv;
-    }
-
-    public void setCvv(String cvv) {
-        this.cvv = cvv;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Order order = (Order) o;
-        return Objects.equals(id, order.id);
+    public static long getSerialversionuid() {
+        return serialVersionUID;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Order other = (Order) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
 }
