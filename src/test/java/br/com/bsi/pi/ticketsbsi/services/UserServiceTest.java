@@ -4,18 +4,22 @@ import br.com.bsi.pi.ticketsbsi.dto.LoginDTO;
 import br.com.bsi.pi.ticketsbsi.entities.Order;
 import br.com.bsi.pi.ticketsbsi.entities.User;
 import br.com.bsi.pi.ticketsbsi.repositories.UserRepository;
+import br.com.bsi.pi.ticketsbsi.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class UserServiceTest {
 
-    private UserRepository repository = Mockito.mock(UserRepository.class);
+    private UserRepository repository = mock(UserRepository.class);
 
     private UserService userService;
 
@@ -26,9 +30,9 @@ class UserServiceTest {
 
     @Test
     void findAll() {
-        Mockito.when(repository.findAll()).thenReturn(new ArrayList<>());
+        when(repository.findAll()).thenReturn(new ArrayList<>());
 
-        var result = repository.findAll();
+        var result = userService.findAll();
 
         Assertions.assertNotNull(result);
 
@@ -38,11 +42,11 @@ class UserServiceTest {
     void findById() {
         final Long l = 1L;
 
-        User u = Mockito.mock(User.class);
+        User u = mock(User.class);
 
-        Mockito.when(repository.findById(l)).thenReturn(java.util.Optional.ofNullable(u));
+        when(repository.findById(l)).thenReturn(java.util.Optional.ofNullable(u));
 
-        var result = repository.findById(l);
+        var result = userService.findById(l);
 
         Assertions.assertNotNull(result);
     }
@@ -52,11 +56,11 @@ class UserServiceTest {
 
         final User userTest = new User();
 
-        User u = Mockito.mock(User.class);
+        User u = mock(User.class);
 
-        Mockito.when(repository.save(userTest)).thenReturn(u);
+        when(repository.save(userTest)).thenReturn(u);
 
-        var result = repository.save(userTest);
+        var result = userService.insert(userTest);
 
         Assertions.assertNotNull(result);
 
@@ -82,25 +86,75 @@ class UserServiceTest {
 
         final User userTest = new User();
 
-        User u = Mockito.mock(User.class);
+        User u = mock(User.class);
 
-        Mockito.when(repository.save(userTest)).thenReturn(u);
+        Optional optional = mock(Optional.class);
 
-        var result = repository.save(userTest);
+        when(optional.get()).thenReturn(u);
+
+        when(repository.findById(Mockito.anyLong())).thenReturn(optional);
+
+        when(repository.save(userTest)).thenReturn(u);
+
+        var result = userService.update(1L, userTest);
 
         Assertions.assertNotNull(result);
     }
 
+
+    @Test
+    void updateWithThrow() {
+
+        final User userTest = new User();
+
+        User u = mock(User.class);
+
+        Optional optional = mock(Optional.class);
+
+        when(optional.get()).thenReturn(u);
+
+        when(repository.findById(Mockito.anyLong())).thenThrow(new EntityNotFoundException("error"));
+
+        when(repository.save(userTest)).thenReturn(u);
+
+        Assertions.assertThrows(ResourceNotFoundException.class,
+                () -> userService.update(1L, userTest));
+    }
+
     @Test
     void login() {
-//        final LoginDTO login = new LoginDTO();
-//
-//        User u = Mockito.mock(User.class);
-//
-//        Mockito.when(repository.login(login)).thenReturn(u);
-//
-//        var result = repository.login(login);
-//
-//        Assertions.assertNotNull(result);
+        final LoginDTO login = new LoginDTO();
+        login.setEmail("teste");
+        login.setPassword("123");
+
+        User u = Mockito.mock(User.class);
+        u.setPassword("123");
+
+        when(u.getPassword()).thenReturn("123");
+
+        Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(u);
+
+        var result = userService.login(login);
+
+        Assertions.assertNotNull(result);
+    }
+
+
+    @Test
+    void loginWithWrongUser() {
+        final LoginDTO login = new LoginDTO();
+        login.setEmail("teste");
+        login.setPassword("1234");
+
+        User u = Mockito.mock(User.class);
+        u.setPassword("123");
+
+        when(u.getPassword()).thenReturn("123");
+
+        Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(u);
+
+        var result = userService.login(login);
+
+        Assertions.assertNull(result);
     }
 }

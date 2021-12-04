@@ -1,20 +1,21 @@
 package br.com.bsi.pi.ticketsbsi.services;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.persistence.EntityNotFoundException;
-
+import br.com.bsi.pi.ticketsbsi.entities.Order;
+import br.com.bsi.pi.ticketsbsi.entities.Product;
+import br.com.bsi.pi.ticketsbsi.repositories.OrderRepository;
+import br.com.bsi.pi.ticketsbsi.repositories.PaymentRepository;
+import br.com.bsi.pi.ticketsbsi.repositories.ProductRepository;
+import br.com.bsi.pi.ticketsbsi.services.exceptions.DatabaseException;
+import br.com.bsi.pi.ticketsbsi.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import br.com.bsi.pi.ticketsbsi.entities.Order;
-import br.com.bsi.pi.ticketsbsi.entities.Product;
-import br.com.bsi.pi.ticketsbsi.repositories.OrderRepository;
-import br.com.bsi.pi.ticketsbsi.services.exceptions.DatabaseException;
-import br.com.bsi.pi.ticketsbsi.services.exceptions.ResourceNotFoundException;
+import javax.persistence.EntityNotFoundException;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -22,8 +23,16 @@ public class OrderService {
     @Autowired
     private OrderRepository repository;
 
-    public OrderService(OrderRepository repository) {
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    public OrderService(OrderRepository repository, PaymentRepository paymentRepository, ProductRepository productRepository) {
         this.repository = repository;
+        this.paymentRepository = paymentRepository;
+        this.productRepository = productRepository;
     }
 
     public List<Order> findAll() {
@@ -36,6 +45,10 @@ public class OrderService {
     }
 
     public Order insert(Order order) {
+        Product p = productRepository.findById(order.getProduct().getId()).get();
+        order.setProduct(p);
+        paymentRepository.save(order.getPayment());
+        order.setPaymentMoment(new Date());
         Double sum = 0.0;
         sum += order.getQuantity() * order.getProduct().getPrice();
         order.setTotal(sum);
@@ -55,6 +68,8 @@ public class OrderService {
 
     public Order update(Long id, Order order) {
         try {
+            Product p = productRepository.findById(order.getProduct().getId()).get();
+            order.setProduct(p);
             Double sum = 0.0;
             sum += order.getQuantity() * order.getProduct().getPrice();
             order.setTotal(sum);
@@ -62,7 +77,7 @@ public class OrderService {
             return order;
         } catch (
 
-        EntityNotFoundException e) {
+                EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
         }
     }

@@ -1,6 +1,5 @@
 package br.com.bsi.pi.ticketsbsi.config;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -66,13 +65,13 @@ public class TestConfig implements CommandLineRunner {
                 pay2 = paymentRepository.save(pay2);
                 pay3 = paymentRepository.save(pay3);
 
-                Order o1 = new Order(null, 2, p1.getPrice(), p1, pay1, p1.getPrice() * 3);
-                // Order o2 = new Order(null, pay2, c2, null);
-                // Order o3 = new Order(null, pay3, c3, null);
+                Order o1 = new Order(null, 5, p1.getPrice(), p1, pay1, 5 * p1.getPrice());
+                Order o2 = new Order(null, 3, p2.getPrice(), p2, pay2, 3 * p2.getPrice());
+                Order o3 = new Order(null, 2, p3.getPrice(), p3, pay3, 2 * p3.getPrice());
 
                 o1 = orderRepository.save(o1);
-                // o2 = orderRepository.save(o2);
-                // o3 = orderRepository.save(o3);
+                o2 = orderRepository.save(o2);
+                o3 = orderRepository.save(o3);
 
                 System.out.println("Rodando TESTCONFIG");
         }

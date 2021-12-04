@@ -2,7 +2,9 @@
 package br.com.bsi.pi.ticketsbsi.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -35,8 +36,8 @@ public class Product implements Serializable {
     private String description;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Order order;
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, targetEntity = Order.class)
+    private List<Order> order = new ArrayList<>();
 
     public Product() {
     }
@@ -105,7 +106,15 @@ public class Product implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }    
+
+    public List<Order> getOrder() {
+        return order;
     }
+
+    // public void setOrder(List<Order> order) {
+    //     this.order = order;
+    // }
 
     @Override
     public int hashCode() {

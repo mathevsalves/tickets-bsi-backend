@@ -34,10 +34,8 @@ public class ProductService {
     public List<Product> findAll(boolean isPrevious) {
         final Date dateNow = new Date();
         List<Product> list = new ArrayList<>();
-        if(isPrevious)
-            list = repository.findByDateShowLessThan(dateNow);
-        else
-            list = repository.findByDateShowGreaterThan(dateNow);
+        if (isPrevious) list = repository.findByDateShowLessThan(dateNow);
+        else list = repository.findByDateShowGreaterThan(dateNow);
         return list;
     }
 

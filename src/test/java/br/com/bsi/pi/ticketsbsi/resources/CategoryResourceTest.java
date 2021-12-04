@@ -1,15 +1,14 @@
 package br.com.bsi.pi.ticketsbsi.resources;
 
 import br.com.bsi.pi.ticketsbsi.entities.Category;
-import br.com.bsi.pi.ticketsbsi.entities.Order;
 import br.com.bsi.pi.ticketsbsi.services.CategoryService;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CategoryResourceTest {

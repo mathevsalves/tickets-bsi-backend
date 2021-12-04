@@ -1,14 +1,13 @@
 package br.com.bsi.pi.ticketsbsi.resources;
 
-import java.util.ArrayList;
-
+import br.com.bsi.pi.ticketsbsi.entities.Product;
+import br.com.bsi.pi.ticketsbsi.services.ProductService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import br.com.bsi.pi.ticketsbsi.entities.Product;
-import br.com.bsi.pi.ticketsbsi.services.ProductService;
+import java.util.ArrayList;
 
 class ProductResourceTest {
 
@@ -47,4 +46,4 @@ class ProductResourceTest {
 
     }
 
-    }
+}

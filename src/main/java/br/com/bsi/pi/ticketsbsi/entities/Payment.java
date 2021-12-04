@@ -42,27 +42,27 @@ public class Payment implements Serializable {
     @Column(name = "cvv", nullable = false, length = 3)
     private String cvv;
 
-    @Size(min = 11, max = 14)
-    @Column(name = "cpfCnpj", nullable = false)
-    private String cpfCnpj;
+    @Size(min = 11, max = 11)
+    @Column(name = "cpf", nullable = false)
+    private String cpf;
 
     @Email
     @Column(name = "email", nullable = false)
     private String email;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "cart", cascade = CascadeType.DETACH)
+    @OneToOne(mappedBy = "payment", cascade = CascadeType.DETACH)
     private Order order;
 
     public Payment() {}
 
-    public Payment(Long id, String name, String number, String validated, String cvv, String cpfCnpj, String email) {
+    public Payment(Long id, String name, String number, String validated, String cvv, String cpf, String email) {
         this.id = id;
         this.name = name;
         this.number = number;
         this.validated = validated;
         this.cvv = cvv;
-        this.cpfCnpj = cpfCnpj;
+        this.cpf = cpf;
         this.email = email;
     }
 
@@ -106,12 +106,12 @@ public class Payment implements Serializable {
         this.cvv = cvv;
     }
 
-    public String getCpfCnpj() {
-        return cpfCnpj;
+    public String getcpf() {
+        return cpf;
     }
 
-    public void setCpfCnpj(String cpfCnpj) {
-        this.cpfCnpj = cpfCnpj;
+    public void setcpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public String getEmail() {

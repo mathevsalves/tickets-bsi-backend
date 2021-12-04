@@ -1,8 +1,6 @@
 package br.com.bsi.pi.ticketsbsi.resources;
 
-import br.com.bsi.pi.ticketsbsi.entities.Category;
 import br.com.bsi.pi.ticketsbsi.entities.Order;
-import br.com.bsi.pi.ticketsbsi.services.CategoryService;
 import br.com.bsi.pi.ticketsbsi.services.OrderService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class OrderResourceTest {
 
@@ -53,15 +49,27 @@ class OrderResourceTest {
     @Test
     void insert() {
 
+//        final Order order = new Order();
+//
+//        Order o = Mockito.mock(Order.class);
+//
+//        Mockito.when(service.insert(order)).thenReturn(o);
+//
+//        var result = orderResource.insert(order);
+//
+//        Assertions.assertNotNull(result);
+    }
+
+    @Test
+    void update() {
         final Order order = new Order();
 
         Order o = Mockito.mock(Order.class);
 
-        Mockito.when(service.insert(order)).thenReturn(o);
+        Mockito.when(service.update(Mockito.anyLong(), Mockito.any(Order.class))).thenReturn(o);
 
-        var result = orderResource.insert(order);
+        var result = orderResource.update(1L, order);
 
         Assertions.assertNotNull(result);
-
     }
 }

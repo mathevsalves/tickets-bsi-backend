@@ -2,19 +2,20 @@
 package br.com.bsi.pi.ticketsbsi.entities;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "tb_order")
@@ -29,7 +30,7 @@ public class Order implements Serializable {
     private Integer quantity;
     private Double price;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
 
@@ -38,6 +39,10 @@ public class Order implements Serializable {
     private Payment payment;
 
     private Double total;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT-3")
+    @Column(name = "payment_moment", updatable = false)
+    private Date paymentMoment;
 
     public Order() {
     }
@@ -49,6 +54,7 @@ public class Order implements Serializable {
         this.product = product;
         this.payment = payment;
         this.total = total;
+        this.paymentMoment = new Date();
     }
 
     public Long getId() {
@@ -99,8 +105,12 @@ public class Order implements Serializable {
         this.total = total;
     }
 
-    public static long getSerialversionuid() {
-        return serialVersionUID;
+    public Date getPaymentMoment() {
+        return paymentMoment;
+    }
+
+    public void setPaymentMoment(Date paymentMoment) {
+        this.paymentMoment = paymentMoment;
     }
 
     @Override
