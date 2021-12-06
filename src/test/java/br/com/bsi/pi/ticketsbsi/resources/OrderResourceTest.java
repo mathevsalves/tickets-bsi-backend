@@ -8,16 +8,20 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Optional;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class OrderResourceTest {
 
-    private OrderService service = Mockito.mock(OrderService.class);
+    private final OrderService service = Mockito.mock(OrderService.class);
 
-    private OrderResource orderResource;
+    private OrderResource resource;
 
     @BeforeEach
     public void setup() {
-        orderResource = new OrderResource(service);
+        resource = new OrderResource(service);
     }
 
     @Test
@@ -25,7 +29,7 @@ class OrderResourceTest {
 
         Mockito.when(service.findAll()).thenReturn(new ArrayList<>());
 
-        var result = orderResource.findAll();
+        var result = resource.findAll();
 
         Assertions.assertNotNull(result);
 
@@ -33,14 +37,12 @@ class OrderResourceTest {
 
     @Test
     void findById() {
+        final Long id = 1L;
+        Order order = Mockito.mock(Order.class);
 
-        final Long l = 1L;
+        Mockito.when(service.findById(id)).thenReturn(order);
 
-        Order o = Mockito.mock(Order.class);
-
-        Mockito.when(service.findById(l)).thenReturn(o);
-
-        var result = orderResource.findById(l);
+        var result = resource.findById(id);
 
         Assertions.assertNotNull(result);
 
@@ -48,27 +50,36 @@ class OrderResourceTest {
 
     @Test
     void insert() {
-
-//        final Order order = new Order();
+//        final Product productTest = new Product();
+//        Product product = mock(Product.class);
 //
-//        Order o = Mockito.mock(Order.class);
+//        when(service.insert(productTest)).thenReturn(product);
 //
-//        Mockito.when(service.insert(order)).thenReturn(o);
-//
-//        var result = orderResource.insert(order);
+//        var result = resource.insert(productTest);
 //
 //        Assertions.assertNotNull(result);
     }
 
     @Test
+    void delete() {
+        Long id = 1L;
+        var result = resource.delete(id);
+
+        Assertions.assertNotNull(result);
+    }
+
+    @Test
     void update() {
-        final Order order = new Order();
+        final Long id = 1L;
+        final Order orderTest = new Order();
+        Order order = mock(Order.class);
+        Optional optional = mock(Optional.class);
 
-        Order o = Mockito.mock(Order.class);
+        when(optional.get()).thenReturn(order);
 
-        Mockito.when(service.update(Mockito.anyLong(), Mockito.any(Order.class))).thenReturn(o);
+        when(service.update(id, orderTest)).thenReturn(order);
 
-        var result = orderResource.update(1L, order);
+        var result = resource.update(1L, orderTest);
 
         Assertions.assertNotNull(result);
     }

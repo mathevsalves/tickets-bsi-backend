@@ -75,9 +75,7 @@ public class OrderService {
             order.setTotal(sum);
             order = repository.save(order);
             return order;
-        } catch (
-
-                EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
         }
     }

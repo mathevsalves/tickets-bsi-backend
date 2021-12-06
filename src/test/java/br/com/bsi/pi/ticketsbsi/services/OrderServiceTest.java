@@ -19,18 +19,15 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.mock;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class OrderServiceTest {
 
-    private OrderRepository repository = mock(OrderRepository.class);
+    private final OrderRepository repository = mock(OrderRepository.class);
 
-    private OrderService service;
+    private final PaymentRepository paymentRepository = mock(PaymentRepository.class);
 
-    private PaymentRepository paymentRepository = mock(PaymentRepository.class);
-
-    private ProductRepository productRepository = mock(ProductRepository.class);
+    private final ProductRepository productRepository = mock(ProductRepository.class);
 
     @Test
     void findAll() {
@@ -45,9 +42,7 @@ class OrderServiceTest {
 
     @Test
     void findById() {
-
         Long id = 1L;
-
         Optional optional = mock(Optional.class);
 
         when(repository.findById(id)).thenReturn(optional);
@@ -60,6 +55,20 @@ class OrderServiceTest {
 
         Assertions.assertNull(result);
 
+    }
+
+    @Test
+    void findByIdWithThrow() {
+        Order o = mock(Order.class);
+        Optional optional = mock(Optional.class);
+
+        when(optional.get()).thenReturn(o);
+
+        var service = new OrderService(repository, paymentRepository, productRepository);
+
+        doThrow(new ResourceNotFoundException("error")).when(repository).findById(anyLong());
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> service.findById(anyLong()));
     }
 
     @Test
@@ -93,11 +102,14 @@ class OrderServiceTest {
 
     @Test
     void delete() {
+        var service = new OrderService(repository, paymentRepository, productRepository);
 
-        final Order orderTest = new Order();
+        service.delete(1L);
+    }
 
+    @Test
+    void deleteWithFirstThrow() {
         Order o = mock(Order.class);
-
         Optional optional = mock(Optional.class);
 
         when(optional.get()).thenReturn(o);
@@ -112,11 +124,7 @@ class OrderServiceTest {
 
     @Test
     void deleteWithSecondThrow() {
-
-        final Order orderTest = new Order();
-
         Order o = mock(Order.class);
-
         Optional optional = mock(Optional.class);
 
         when(optional.get()).thenReturn(o);
@@ -126,33 +134,34 @@ class OrderServiceTest {
         doThrow(new DataIntegrityViolationException("error")).when(repository).deleteById(anyLong());
 
         Assertions.assertThrows(DatabaseException.class, () -> service.delete(1L));
-
     }
 
     @Test
     void update() {
-
-        Product product = mock(Product.class);
-
-        Product p = new Product();
-        p.setPrice(100.0);
-        p.setId(1L);
-
-        Order o = new Order();
-        o.setPrice(100.0);
-        o.setProduct(p);
-        o.setQuantity(5);
-
         Optional optional = mock(Optional.class);
 
-        when(optional.get()).thenReturn(product);
+        Product productTest = mock(Product.class);
+        Product product = new Product();
+        product.setPrice(100.0);
+        product.setId(1L);
+
+        Order order = new Order();
+        order.setPrice(100.0);
+        order.setProduct(product);
+        order.setQuantity(5);
+        Double sum = 0.0;
+        sum += order.getQuantity() * order.getProduct().getPrice();
+        order.setTotal(sum);
+
+        when(optional.get()).thenReturn(productTest);
 
         when(productRepository.findById(anyLong())).thenReturn(optional);
 
         var service = new OrderService(repository, paymentRepository, productRepository);
 
-        when(repository.save(any())).thenReturn(o);
-        var result = service.insert(o);
+        when(repository.save(order)).thenReturn(order);
+
+        var result = service.insert(order);
 
         Assertions.assertNotNull(result);
     }
@@ -160,26 +169,26 @@ class OrderServiceTest {
 
     @Test
     void updateWithThrow() {
-        Product p = new Product();
-        p.setPrice(100.0);
-        p.setId(1L);
-
-        Order o = new Order();
-        o.setPrice(100.0);
-        o.setProduct(p);
-        o.setQuantity(5);
-
         Optional optional = mock(Optional.class);
+
+        Product product = new Product();
+        product.setPrice(100.0);
+        product.setId(1L);
+
+        Order order = new Order();
+        order.setPrice(100.0);
+        order.setProduct(product);
+        order.setQuantity(5);
 
         when(productRepository.findById(Mockito.anyLong())).thenReturn(optional);
 
         when(optional.get()).thenThrow(new EntityNotFoundException("error"));
 
-        when(repository.save(any())).thenReturn(o);
+        when(repository.save(any())).thenReturn(order);
 
         var service = new OrderService(repository, paymentRepository, productRepository);
 
         Assertions.assertThrows(ResourceNotFoundException.class,
-                () -> service.update(1L, o));
+                () -> service.update(1L, order));
     }
 }

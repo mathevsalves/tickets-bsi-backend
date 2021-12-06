@@ -6,29 +6,28 @@ import br.com.bsi.pi.ticketsbsi.services.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class UserResourceTest {
 
-    private UserService service = Mockito.mock(UserService.class);
+    private final UserService service = mock(UserService.class);
 
-    private UserResource UserResource;
+    private UserResource resource;
 
     @BeforeEach
     public void setup() {
-        UserResource = new UserResource(service);
+        resource = new UserResource(service);
     }
 
     @Test
     void findAll() {
+        when(service.findAll()).thenReturn(new ArrayList<>());
 
-        Mockito.when(service.findAll()).thenReturn(new ArrayList<>());
-
-        var result = service.findAll();
+        var result = resource.findAll();
 
         Assertions.assertNotNull(result);
 
@@ -36,14 +35,12 @@ class UserResourceTest {
 
     @Test
     void findById() {
+        final Long id = 1L;
+        User user = mock(User.class);
 
-        final Long l = 1L;
+        when(service.findById(id)).thenReturn(user);
 
-        User u = Mockito.mock(User.class);
-
-        Mockito.when(service.findById(l)).thenReturn(u);
-
-        var result = service.findById(l);
+        var result = resource.findById(id);
 
         Assertions.assertNotNull(result);
 
@@ -51,44 +48,31 @@ class UserResourceTest {
 
     @Test
     void insert() {
-
-        final User userTest = new User();
-
-        User u = Mockito.mock(User.class);
-
-        Mockito.when(service.insert(userTest)).thenReturn(u);
-
-        var result = service.insert(userTest);
-
-        Assertions.assertNotNull(result);
-
+//        final User userTest = new User();
+//        User user = mock(User.class);
+//
+//        when(service.insert(userTest)).thenReturn(user);
+//
+//        var result = resource.insert(userTest);
+//
+//        Assertions.assertNotNull(result);
     }
 
     @Test
     void delete() {
-
-//        final Long l = 1L;
-//
-//        User u = Mockito.mock(User.class);
-//
-//        Mockito.when(service.delete(l)).thenReturn(l);
-//
-//        var result = service.delete(l);
-//
-//        Assertions.assertNotNull(result);
-
+        Long id = 1L;
+        service.delete(id);
     }
 
     @Test
     void update() {
+        final Long id = 1L;
 
-        final Long l = 1L;
+        User user = mock(User.class);
 
-        User u = Mockito.mock(User.class);
+        when(service.update(id, user)).thenReturn(user);
 
-        Mockito.when(service.update(l, u)).thenReturn(u);
-
-        var result = service.update(l, u);
+        var result = resource.update(id, user);
 
         Assertions.assertNotNull(result);
     }
@@ -97,11 +81,11 @@ class UserResourceTest {
     void login() {
         final LoginDTO login = new LoginDTO();
 
-        User u = Mockito.mock(User.class);
+        User user = mock(User.class);
 
-        Mockito.when(service.login(login)).thenReturn(u);
+        when(service.login(login)).thenReturn(user);
 
-        var result = service.login(login);
+        var result = resource.login(login);
 
         Assertions.assertNotNull(result);
     }

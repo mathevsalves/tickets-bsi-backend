@@ -1,7 +1,6 @@
 package br.com.bsi.pi.ticketsbsi.services;
 
 import br.com.bsi.pi.ticketsbsi.dto.LoginDTO;
-import br.com.bsi.pi.ticketsbsi.entities.Order;
 import br.com.bsi.pi.ticketsbsi.entities.User;
 import br.com.bsi.pi.ticketsbsi.repositories.UserRepository;
 import br.com.bsi.pi.ticketsbsi.services.exceptions.ResourceNotFoundException;
@@ -14,89 +13,74 @@ import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class UserServiceTest {
 
-    private UserRepository repository = mock(UserRepository.class);
+    private final UserRepository repository = mock(UserRepository.class);
 
-    private UserService userService;
+    private UserService service;
 
     @BeforeEach
     public void setup() {
-        userService = new UserService(repository);
+        service = new UserService(repository);
     }
 
     @Test
     void findAll() {
         when(repository.findAll()).thenReturn(new ArrayList<>());
 
-        var result = userService.findAll();
+        var result = service.findAll();
 
         Assertions.assertNotNull(result);
-
     }
 
     @Test
     void findById() {
-        final Long l = 1L;
+        final Long id = 1L;
+        User user = mock(User.class);
 
-        User u = mock(User.class);
+        when(repository.findById(id)).thenReturn(java.util.Optional.ofNullable(user));
 
-        when(repository.findById(l)).thenReturn(java.util.Optional.ofNullable(u));
-
-        var result = userService.findById(l);
+        var result = service.findById(id);
 
         Assertions.assertNotNull(result);
     }
 
     @Test
     void insert() {
-
         final User userTest = new User();
+        User user = mock(User.class);
 
-        User u = mock(User.class);
+        when(repository.save(userTest)).thenReturn(user);
 
-        when(repository.save(userTest)).thenReturn(u);
-
-        var result = userService.insert(userTest);
+        var result = service.insert(userTest);
 
         Assertions.assertNotNull(result);
-
     }
 
     @Test
     void delete() {
+        Long id = 1L;
+        var service = new UserService(repository);
 
-//        final User userTest = new User();
-//
-//        User u = Mockito.mock(User.class);
-//
-//        Mockito.when(repository.delete(userTest)).thenReturn(u);
-//
-//        var result = repository.delete(userTest);
-//
-//        Assertions.assertNotNull(result);
-
+        service.delete(id);
     }
 
     @Test
     void update() {
-
         final User userTest = new User();
-
-        User u = mock(User.class);
-
+        User user = mock(User.class);
         Optional optional = mock(Optional.class);
 
-        when(optional.get()).thenReturn(u);
+        when(optional.get()).thenReturn(user);
 
         when(repository.findById(Mockito.anyLong())).thenReturn(optional);
 
-        when(repository.save(userTest)).thenReturn(u);
+        when(repository.save(userTest)).thenReturn(user);
 
-        var result = userService.update(1L, userTest);
+        var result = service.update(1L, userTest);
 
         Assertions.assertNotNull(result);
     }
@@ -104,21 +88,17 @@ class UserServiceTest {
 
     @Test
     void updateWithThrow() {
-
         final User userTest = new User();
-
-        User u = mock(User.class);
-
+        User user = mock(User.class);
         Optional optional = mock(Optional.class);
 
-        when(optional.get()).thenReturn(u);
+        when(optional.get()).thenReturn(user);
 
         when(repository.findById(Mockito.anyLong())).thenThrow(new EntityNotFoundException("error"));
 
-        when(repository.save(userTest)).thenReturn(u);
+        when(repository.save(userTest)).thenReturn(user);
 
-        Assertions.assertThrows(ResourceNotFoundException.class,
-                () -> userService.update(1L, userTest));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> service.update(1L, userTest));
     }
 
     @Test
@@ -132,9 +112,9 @@ class UserServiceTest {
 
         when(u.getPassword()).thenReturn("123");
 
-        Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(u);
+        when(repository.findByEmail(Mockito.anyString())).thenReturn(u);
 
-        var result = userService.login(login);
+        var result = service.login(login);
 
         Assertions.assertNotNull(result);
     }
@@ -146,14 +126,14 @@ class UserServiceTest {
         login.setEmail("teste");
         login.setPassword("1234");
 
-        User u = Mockito.mock(User.class);
-        u.setPassword("123");
+        User user = Mockito.mock(User.class);
+        user.setPassword("123");
 
-        when(u.getPassword()).thenReturn("123");
+        when(user.getPassword()).thenReturn("123");
 
-        Mockito.when(repository.findByEmail(Mockito.anyString())).thenReturn(u);
+        when(repository.findByEmail(Mockito.anyString())).thenReturn(user);
 
-        var result = userService.login(login);
+        var result = service.login(login);
 
         Assertions.assertNull(result);
     }

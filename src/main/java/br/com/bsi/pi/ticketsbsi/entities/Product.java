@@ -1,21 +1,12 @@
-
 package br.com.bsi.pi.ticketsbsi.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_product")
@@ -28,6 +19,7 @@ public class Product implements Serializable {
     private Long id;
 
     @Lob
+    @Column(name = "photo", columnDefinition = "text")
     private byte[] photo;
     private String name;
     private String address;
@@ -106,7 +98,7 @@ public class Product implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }    
+    }
 
     public List<Order> getOrder() {
         return order;
@@ -126,18 +118,13 @@ public class Product implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
         Product other = (Product) obj;
         if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
+            if (other.id != null) return false;
+        } else if (!id.equals(other.id)) return false;
         return true;
     }
 

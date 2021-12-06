@@ -6,28 +6,30 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CategoryResourceTest {
 
-    CategoryService service = Mockito.mock(CategoryService.class);
+    CategoryService service = mock(CategoryService.class);
 
-    CategoryResource categoryResourceTest;
+    CategoryResource resource;
 
     @BeforeEach
     public void setup() {
-        categoryResourceTest = new CategoryResource(service);
+        resource = new CategoryResource(service);
     }
 
     @Test
     void findAll() {
 
-        Mockito.when(service.findAll()).thenReturn(new ArrayList<>());
+        when(service.findAll()).thenReturn(new ArrayList<>());
 
-        var result = categoryResourceTest.findAll();
+        var result = resource.findAll();
 
         Assertions.assertNotNull(result);
 
@@ -38,11 +40,11 @@ class CategoryResourceTest {
 
         Long id = 1L;
 
-        Category c = Mockito.mock(Category.class);
+        Category c = mock(Category.class);
 
-        Mockito.when(service.findById(id)).thenReturn(c);
+        when(service.findById(id)).thenReturn(c);
 
-        var result = categoryResourceTest.findById(id);
+        var result = resource.findById(id);
 
         Assertions.assertNotNull(result);
     }

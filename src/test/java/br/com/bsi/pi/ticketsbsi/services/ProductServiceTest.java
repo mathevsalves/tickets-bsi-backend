@@ -1,30 +1,24 @@
 package br.com.bsi.pi.ticketsbsi.services;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
-import br.com.bsi.pi.ticketsbsi.entities.User;
-import br.com.bsi.pi.ticketsbsi.repositories.UserRepository;
+import br.com.bsi.pi.ticketsbsi.entities.Product;
+import br.com.bsi.pi.ticketsbsi.repositories.ProductRepository;
 import br.com.bsi.pi.ticketsbsi.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.mockito.Mockito;
-
-import br.com.bsi.pi.ticketsbsi.entities.Product;
-import br.com.bsi.pi.ticketsbsi.repositories.ProductRepository;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.Optional;
 
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductServiceTest {
 
-    private ProductRepository repository = Mockito.mock(ProductRepository.class);
-
-    private ProductService service;
+    private final ProductRepository repository = mock(ProductRepository.class);
 
     @Test
     void findAll() {
@@ -39,14 +33,12 @@ class ProductServiceTest {
 
     @Test
     void findById() {
-
         Long id = 1L;
+        Optional optional = mock(Optional.class);
 
-        Optional optional = Mockito.mock(Optional.class);
+        when(repository.findById(id)).thenReturn(optional);
 
-        Mockito.when(repository.findById(id)).thenReturn(optional);
-
-        Mockito.when(optional.get()).thenReturn(new Product());
+        when(optional.get()).thenReturn(new Product());
 
         var service = new ProductService(repository);
 
@@ -61,37 +53,41 @@ class ProductServiceTest {
 
     @Test
     void insert() {
-        final Product product = new Product();
+        final Product productTest = new Product();
+        Product product = mock(Product.class);
 
-        Product p = mock(Product.class);
+        when(repository.save(productTest)).thenReturn(product);
 
-        when(repository.save(product)).thenReturn(p);
+        var service = new ProductService(repository);
 
-        var result = service.insert(product);
+        var result = service.insert(productTest);
 
         Assertions.assertNotNull(result);
     }
 
     @Test
     void delete() {
+        Long id = 1L;
+        var service = new ProductService(repository);
+
+        service.delete(id);
     }
 
     @Test
     void update() {
-
-        final Product product = new Product();
-
-        Product p = mock(Product.class);
-
+        final Product productTest = new Product();
+        Product product = mock(Product.class);
         Optional optional = mock(Optional.class);
 
-        when(optional.get()).thenReturn(p);
+        when(optional.get()).thenReturn(product);
 
-        when(repository.findById(Mockito.anyLong())).thenReturn(optional);
+        when(repository.findById(anyLong())).thenReturn(optional);
 
-        when(repository.save(product)).thenReturn(p);
+        when(repository.save(productTest)).thenReturn(product);
 
-        var result = service.update(1L, product);
+        var service = new ProductService(repository);
+
+        var result = service.update(1L, productTest);
 
         Assertions.assertNotNull(result);
     }
@@ -99,19 +95,18 @@ class ProductServiceTest {
 
     @Test
     void updateWithThrow() {
-
-        final Product product = new Product();
-
-        Product p = mock(Product.class);
-
+        final Product productTest = new Product();
+        Product product = mock(Product.class);
         Optional optional = mock(Optional.class);
 
-        when(optional.get()).thenReturn(p);
+        when(optional.get()).thenReturn(product);
 
-        when(repository.findById(Mockito.anyLong())).thenThrow(new EntityNotFoundException("error"));
+        when(repository.findById(anyLong())).thenThrow(new EntityNotFoundException("error"));
 
-        when(repository.save(product)).thenReturn(p);
+        when(repository.save(productTest)).thenReturn(product);
 
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> service.update(1L, product));
+        var service = new ProductService(repository);
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> service.update(1L, productTest));
     }
 }
